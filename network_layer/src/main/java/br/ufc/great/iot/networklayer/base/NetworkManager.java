@@ -85,9 +85,9 @@ public class NetworkManager{
 		netwoksAvaliable.setApplicationID(context.getPackageName());
 		//router = new AODV(context.getPackageName(), (AODVEventsNotifier) routingNotifier, true);
 		router = new Flooding(context.getPackageName(), routingNotifier);
-		addBluetoothNetwork();
+		//addBluetoothNetwork();
 		//addWifiDirectNetwork();
-		//addWifiNetwork();
+		addWifiNetwork();
 	}
 	
 	private NetworkManager() {

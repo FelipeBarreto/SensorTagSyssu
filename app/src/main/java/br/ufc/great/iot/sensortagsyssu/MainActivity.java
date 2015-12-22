@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements SensorTagListener
             public void run() {
                 Tuple t = new Tuple();
                 t.addField("id", ID);
-                t.addField("value", s);
+                t.addField("value", "hello");
 
                 mSyssu.put(t, Provider.ADHOC);
             }

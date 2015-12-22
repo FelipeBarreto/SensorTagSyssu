@@ -210,6 +210,7 @@ public class NetworkObserver extends Thread {
 					ObjectOutputStream outputStream = new ObjectOutputStream(byteStream);
 
 					outputStream.writeObject(message);
+					outputStream.flush();
 					final DatagramPacket packet = new DatagramPacket(byteStream.toByteArray(), byteStream.toByteArray().length,getBroadcastAddress(), DISCOVERY_PORT);
 					if ( datagramSocket != null ) {
 						datagramSocket.send(packet);

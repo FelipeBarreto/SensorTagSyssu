@@ -78,10 +78,7 @@ public class Receiver implements Runnable{
 
 	
 	private void dataReceived(UserDataMessage message) {
-		if(message.getApplicationID().equalsIgnoreCase(applicationID))
-		{
-			notifier.onUserDataReceived(message);
-		}
+		notifier.onUserDataReceived(message);
 	}
 	
 	private void helloMessageReceived(HelloMessage hello) {
