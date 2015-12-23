@@ -54,4 +54,44 @@
         android:id="@+id/bt_calibrate"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Threshold: 1"
+        android:id="@+id/tv_threshold"
+        android:layout_below="@+id/tv_presence"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="76dp"
+        android:textSize="20dp" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/et_threshold"
+        android:layout_alignBottom="@+id/tv_threshold"
+        android:layout_toRightOf="@+id/tv_threshold"
+        android:layout_marginLeft="22dp"
+        android:layout_marginStart="22dp"
+        android:width="100dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Set"
+        android:id="@+id/bt_threshold"
+        android:layout_alignBottom="@+id/et_threshold"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Indicator"
+        android:id="@+id/tv_indicator"
+        android:layout_below="@+id/tv_accel_z"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="33dp" />
 </RelativeLayout>

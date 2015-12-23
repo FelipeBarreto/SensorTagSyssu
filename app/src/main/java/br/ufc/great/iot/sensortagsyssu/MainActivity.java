@@ -1,14 +1,22 @@
 package br.ufc.great.iot.sensortagsyssu;
 
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Date;
 
 import br.ufc.great.sensortag.SensorTag;
 import br.ufc.great.sensortag.callbacks.SensorTagListener;
@@ -21,6 +29,8 @@ public class MainActivity extends AppCompatActivity implements SensorTagListener
 
     private SyssuManager mSyssu;
 
+    private int messageCount = 0;
+
     private double caliX;
     private double caliY;
     private double caliZ;
@@ -29,12 +39,18 @@ public class MainActivity extends AppCompatActivity implements SensorTagListener
     private double lastY;
     private double lastZ;
 
+    private double threshold = 1;
+
     private boolean presence;
 
     private TextView tvAccelX;
     private TextView tvAccelY;
     private TextView tvAccelZ;
     private TextView tvPresence;
+    private TextView tvIndicator;
+
+    private EditText etThreshold;
+    private Button btThreshold;
 
     private Button btCalibrate;
 
@@ -47,10 +63,27 @@ public class MainActivity extends AppCompatActivity implements SensorTagListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        try {
+            createFileOnDevice(false);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         tvAccelX = (TextView) findViewById(R.id.tv_accel_x);
         tvAccelY = (TextView) findViewById(R.id.tv_accel_y);
         tvAccelZ = (TextView) findViewById(R.id.tv_accel_z);
+        tvIndicator = (TextView) findViewById(R.id.tv_indicator);
         tvPresence = (TextView) findViewById(R.id.tv_presence);
+
+        etThreshold = (EditText) findViewById(R.id.et_threshold);
+        btThreshold = (Button) findViewById(R.id.bt_threshold);
+        btThreshold.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                threshold = Double.valueOf(etThreshold.getText().toString());
+            }
+        });
+
 
         btCalibrate = (Button) findViewById(R.id.bt_calibrate);
         btCalibrate.setOnClickListener(new View.OnClickListener() {
@@ -99,14 +132,21 @@ public class MainActivity extends AppCompatActivity implements SensorTagListener
         Tuple t = new Tuple();
         t.addField("id", ID);
         t.addField("presence", "" + presence);
+        t.addField("messageCount", "" + messageCount);
 
-        log();
+        log("id=" + ID + ",presence="+presence + ",timestamp=" + System.currentTimeMillis() + ",messagecount=" + messageCount);
 
         mSyssu.put(t, Provider.ADHOC);
+        messageCount++;
     }
 
-    private void log() {
-        // TODO
+    private void log(final String s) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                writeToFile(s);
+            }
+        }).start();
     }
 
     private void calculePresence() {
@@ -114,9 +154,16 @@ public class MainActivity extends AppCompatActivity implements SensorTagListener
         double y = lastY - caliY;
         double z = lastZ - caliZ;
 
-        double sum = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2));
+        final double sum = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2));
 
-        if(sum > 1){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                tvIndicator.setText("" + sum);
+            }
+        });
+
+        if(sum > threshold){
             mPresenceTimer.reset();
         }
     }
@@ -141,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements SensorTagListener
 
     private class PresenceTimer extends Thread{
 
-        private static final int MAX_TIME = 5000;
+        private static final int MAX_TIME = 30000;
         private int elapsedTime = MAX_TIME;
 
         private boolean running = false;
@@ -186,6 +233,33 @@ public class MainActivity extends AppCompatActivity implements SensorTagListener
 
         public void stopThread(){
             running = false;
+        }
+    }
+
+    public static BufferedWriter out;
+
+    private void createFileOnDevice(Boolean append) throws IOException {
+                /*
+                 * Function to initially create the log file and it also writes the time of creation to file.
+                 */
+        File Root = Environment.getExternalStorageDirectory();
+        if(Root.canWrite()){
+            File  LogFile = new File(Root, "Log.txt");
+            FileWriter LogWriter = new FileWriter(LogFile, append);
+            out = new BufferedWriter(LogWriter);
+            Date date = new Date();
+            out.write("Logged at" + String.valueOf(date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + "\n"));
+            out.flush();
+
+        }
+    }
+
+    public void writeToFile(String message) {
+        try {
+            out.write(message + "\n");
+            out.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
