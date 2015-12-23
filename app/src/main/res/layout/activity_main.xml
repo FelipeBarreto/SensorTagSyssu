@@ -12,5 +12,46 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:text="Accel X: not available"
+        android:id="@+id/tv_accel_x"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Accel Y: not available"
+        android:id="@+id/tv_accel_y"
+        android:layout_marginTop="37dp"
+        android:layout_below="@+id/tv_accel_x"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Accel Z: not available"
+        android:id="@+id/tv_accel_z"
+        android:layout_below="@+id/tv_accel_y"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="46dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Presence Detected: Not available"
+        android:id="@+id/tv_presence"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Calibrate"
+        android:id="@+id/bt_calibrate"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>
